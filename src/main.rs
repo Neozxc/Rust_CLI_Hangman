@@ -1,26 +1,37 @@
-use rand::seq::SliceRandom;
-use std::io::{self, Write};
+mod game;
+mod words;
 
 fn main() {
-    let words: [&str; 5] = ["rustisgod", "programming", "language", "compiler", "ownership"];
-    let secret_word = words.choose(&mut rand::thread_rng()).unwrap();
+    let words: [&str; 5] = [
+        "rustisgod",
+        "programming",
+        "language",
+        "compiler",
+        "ownership",
+    ];
+
+    let secret_word = words::choose_secret_word();
     let mut guesses = 6;
-    let mut guessed_letters = vec!["_", secret_word.len()];
+    let mut guessed_letters = vec!['_'; secret_word.len()];
     let mut incorrect_guesses = Vec::new();
 
     println!("Welcome to the Hangman Game!");
-}
 
-fn display_game_state(guessed_letters: &Vec<char>, incorrect_guesses: &Vec<char>, guesses: usize) {
-    println!("\nWord: {}", guessed_letters.iter().collect::<String>());
-    println!("Incorrect guesses: {:?}", incorrect_guesses);
-    println!("Guesses left: {}", guesses);
-}
+    while guesses > 0 && guessed_letters.contains(&'_') {
+        game::display_game_state(&guessed_letters, &incorrect_guesses, guesses);
+        let guess = game::get_guess();
 
-fn get_guess() -> char {
-    let mut guess = String::new();
-    print!("Enter your guess: ");
-    io::stdout().flush().unwrap();
-    io::stdin().read_line(&mut guess).expect("Failed to read input");
-    guess.trim().chars().next().unwrap()
+        if secret_word.contains(guess) {
+            game::update_guessed_letters(&secret_word, guess, &mut guessed_letters);
+        } else {
+            guesses -= 1;
+            incorrect_guesses.push(guess);
+        }
+    }
+
+    if guessed_letters.contains(&'_') {
+        println!("Game over! The words was: {}", secret_word);
+    } else {
+        println!("You have won! The word you guessed was: {}", secret_word);
+    }
 }
