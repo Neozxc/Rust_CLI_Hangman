@@ -15,7 +15,7 @@ fn main() {
     let mut guessed_letters = vec!['_'; secret_word.len()];
     let mut incorrect_guesses = Vec::new();
 
-    println!("Welcome to the Hangman Game!");
+    println!("Welcome to the Hangman Game! 🔥");
 
     while guesses > 0 && guessed_letters.contains(&'_') {
         game::display_game_state(&guessed_letters, &incorrect_guesses, guesses);
