@@ -12,7 +12,15 @@ fn main() {
 }
 
 fn display_game_state(guessed_letters: &Vec<char>, incorrect_guesses: &Vec<char>, guesses: usize) {
-    println!("\nWord {}", guessed_letters.iter().collect::<String>());
+    println!("\nWord: {}", guessed_letters.iter().collect::<String>());
     println!("Incorrect guesses: {:?}", incorrect_guesses);
     println!("Guesses left: {}", guesses);
+}
+
+fn get_guess() -> char {
+    let mut guess = String::new();
+    print!("Enter your guess: ");
+    io::stdout().flush().unwrap();
+    io::stdin().read_line(&mut guess).expect("Failed to read input");
+    guess.trim().chars().next().unwrap()
 }
